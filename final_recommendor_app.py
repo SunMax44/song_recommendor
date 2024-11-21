@@ -9,6 +9,8 @@ import pickle
 import sys
 import streamlit as st
 from spotipy.oauth2 import SpotifyClientCredentials
+from sklearn.preprocessing import StandardScaler  # for the imported scaler
+from sklearn.cluster import KMeans # for the imported KMeans
 
 # setup spotify API access
 client_id = st.secrets["client_id"]
