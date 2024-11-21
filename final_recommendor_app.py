@@ -119,3 +119,7 @@ if st.session_state.track_ids:
     recommendation_id = cluster_filtered.iloc[random_row, 12]
 
     spotify_player(recommendation_id)
+    # add genre info
+    songs_genre_df = read_csv('songs_genre_df.csv')
+    genre_of_rec = songs_genre_df[songs_genre_df['id'] == recommendation_id]['genre']
+    st.write(f"The song's genre is {genre_of_rec} in case you wondered.")
