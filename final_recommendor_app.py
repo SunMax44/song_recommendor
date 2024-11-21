@@ -90,7 +90,8 @@ if st.session_state.track_ids:
         hot_rec_id = spotify_search2['tracks']['items'][0]['id']
         spotify_player(hot_rec_id)
         st.write(f'Your song is currently sizzling hot, so here is another hot song: {random_title} by {random_artist}')
-        sys.exit()
+        # End this specific branch, but continue the app
+        st.stop()
 
     else:
         st.write("Your song is not in the Billboard Top 100, but of course that doesnt mean anything. Here is a recommendation for you:")
@@ -120,6 +121,6 @@ if st.session_state.track_ids:
 
     spotify_player(recommendation_id)
     # add genre info
-    songs_genre_df = read_csv('songs_genre_df.csv')
+    songs_genre_df = pd.read_csv('songs_genre_df.csv')
     genre_of_rec = songs_genre_df[songs_genre_df['id'] == recommendation_id]['genre']
     st.write(f"The song's genre is {genre_of_rec} in case you wondered.")
