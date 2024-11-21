@@ -19,36 +19,65 @@ sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id,
 # load billboard hot 100 dataframe
 bb_df = pd.read_csv('bbhot100.csv')
 
-# define spotify player to later be able to play the song
+import streamlit as st
+from spotipy.oauth2 import SpotifyClientCredentials
+import spotipy
+
+# Initialize Spotify client
+sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id="your_client_id", client_secret="your_client_secret"))
+
+# Define Spotify player
 def spotify_player(track_id):
     embed_url = f"https://open.spotify.com/embed/track/{track_id}"
     st.components.v1.iframe(embed_url, width=300, height=80)
 
 # Streamlit setup
-# title
-st.title("Spotify Song Recommendor")
-# Text Input
+st.title("Spotify Song Recommender")
 text_input = st.text_input("Enter a song you like to get a recommendation for a song you might also like!")
-st.write("Text Input:", text_input)
 
-# get user input and check if i billboard hot 100
-# if yes give random other hot 100 song
-# if no give kmeans model recommendation based on audiofeatures
+# Initialize session state to manage loop
+if "current_song_index" not in st.session_state:
+    st.session_state.current_song_index = 0
+if "track_ids" not in st.session_state:
+    st.session_state.track_ids = []
+if "track_names" not in st.session_state:
+    st.session_state.track_names = []
 
-if st.button('Lets go!'):
-    # bring user input in specific form
+if st.button("Let's go!"):
+    # Preprocess user input
     song_artist_input = [item.strip().strip('"').lower() for item in text_input.split(',')]
 
+    # Search for the song on Spotify
     spotify_search = sp.search(q=song_artist_input, type='track', limit=10)
-    for song in range(10):
-        input_id = spotify_search['tracks']['items'][song]['id']
-        spotify_player(input_id)
-        input_song_name = spotify_search['tracks']['items'][song]['name']
-        st.write(input_song_name)
-        if st.text_input('Did you mean this song? Type in y for yes or n for no.') in ['y','yes']:
-            break
+
+    # Store results in session state
+    st.session_state.track_names = [song['name'] for song in spotify_search['tracks']['items']]
+    st.session_state.track_ids = [song['id'] for song in spotify_search['tracks']['items']]
+    st.session_state.current_song_index = 0  # Reset the index
+
+# Display the current song in the loop
+if st.session_state.track_ids:
+    # Get the current song and its ID
+    current_index = st.session_state.current_song_index
+    current_song_name = st.session_state.track_names[current_index]
+    current_song_id = st.session_state.track_ids[current_index]
+
+    # Show the Spotify player and song name
+    st.subheader("Is this the song?")
+    spotify_player(current_song_id)
+    st.write(f"Song Name: {current_song_name}")
+
+    # Buttons for user confirmation
+    if st.button("Yes, this is my song!"):
+        st.success("You selected the song!")
+        # Here, you can add code to recommend a new song
+    elif st.button("No, show me the next one."):
+        # Move to the next song
+        if current_index < len(st.session_state.track_ids) - 1:
+            st.session_state.current_song_index += 1
         else:
-            continue
+            st.warning("No more songs to display!")
+
 
     if input_song_name in bb_df['title'].values:
         # Get random row and column indices
