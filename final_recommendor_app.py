@@ -91,10 +91,10 @@ if st.session_state.track_ids:
         sys.exit()
 
     else:
-        st.write("Your song is not in the Billboard Top 100, but of course this doesnt mean anything. Here is a recommendation for you:")
+        st.write("Your song is not in the Billboard Top 100, but of course that doesnt mean anything. Here is a recommendation for you:")
 
     # get audio features of the input song
-    af=pd.DataFrame(sp.audio_features(input_id))
+    af=pd.DataFrame(sp.audio_features(current_song_id))
     af_relevant=af[["danceability","energy","loudness","speechiness","acousticness",
         "instrumentalness","liveness","valence","tempo"]]
 
