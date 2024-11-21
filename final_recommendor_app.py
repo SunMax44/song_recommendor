@@ -9,31 +9,14 @@ import pickle
 import sys
 import streamlit as st
 
+# setup spotify API access
 client_id = st.secrets["client_id"]
 client_secret = st.secrets["client_secret"]
-
-#Initialize SpotiPy with user credentials
-from config import client_id, client_secret
-from spotipy.oauth2 import SpotifyClientCredentials
-
 sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id,
                                                            client_secret=client_secret))
 
+# load billboard hot 100 dataframe
 bb_df = pd.read_csv('bbhot100.csv')
-
-# def play song function
-def play_song(track_id):
-    return IFrame(src="https://open.spotify.com/embed/track/"+track_id,
-       width="320",
-       height="80",
-       frameborder="0",
-       allowtransparency="true",
-       allow="encrypted-media",
-      )
-
-# get user input and check if i billboard hot 100
-# if yes give random other hot 100 song
-# if no give kmeans model recommendation based on audiofeatures
 
 # Streamlit setup
 # title
@@ -41,6 +24,10 @@ st.title("Spotify Song Recommendor")
 # Text Input
 text_input = st.text_input("Enter a song you like to get a recommendation for a song you might also like!")
 st.write("Text Input:", text_input)
+
+# get user input and check if i billboard hot 100
+# if yes give random other hot 100 song
+# if no give kmeans model recommendation based on audiofeatures
 
 if st.button('Lets go!'):
     # bring user input in specific form
