@@ -45,10 +45,10 @@ if "track_names" not in st.session_state:
 
 if st.button("Let's go!"):
     # Preprocess user input
-    song_artist_input = [item.strip().strip('"').lower() for item in text_input.split(',')]
+    #song_artist_input = [item.strip().strip('"').lower() for item in text_input.split(',')]
 
     # Search for the song on Spotify
-    spotify_search = sp.search(q=song_artist_input, type='track', limit=10)
+    spotify_search = sp.search(q=text_input_input, type='track', limit=10)
 
     # Store results in session state
     st.session_state.track_names = [song['name'] for song in spotify_search['tracks']['items']]
