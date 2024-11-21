@@ -19,6 +19,11 @@ sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id,
 # load billboard hot 100 dataframe
 bb_df = pd.read_csv('bbhot100.csv')
 
+# define spotify player to later be able to play the song
+def spotify_player(track_id):
+    embed_url = f"https://open.spotify.com/embed/track/{track_id}"
+    st.components.v1.iframe(embed_url, width=300, height=80)
+
 # Streamlit setup
 # title
 st.title("Spotify Song Recommendor")
