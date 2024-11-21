@@ -34,57 +34,63 @@ def play_song(track_id):
 # if yes give random other hot 100 song
 # if no give kmeans model recommendation based on audiofeatures
 
-# get user input
-song_entered = input('Please enter your favourite song and artist like this example: "mensch","herbert groenemeyer":')
-# bring user input in specific form
-song_artist_input = [item.strip().strip('"').lower() for item in song_entered.split(',')]
+# Streamlit setup
+# title
+st.title("Spotify Song Recommendor")
+# Text Input
+text_input = st.text_input("Enter a song you like to get a recommendation for a song you might also like!")
+st.write("Text Input:", text_input)
 
-spotify_search = sp.search(q=song_artist_input, type='track', limit=10)
-for song in range(10):
-    input_id = spotify_search['tracks']['items'][song]['id']
-    display(play_song(input_id))
-    input_song_name = spotify_search['tracks']['items'][song]['name']
-    print(input_song_name)
-    if input('Did you mean this song? Type in y for yes or n for no.') in ['y','yes']:
-        break
+if st.button('Lets go!'):
+    # bring user input in specific form
+    song_artist_input = [item.strip().strip('"').lower() for item in text_input.split(',')]
+
+    spotify_search = sp.search(q=song_artist_input, type='track', limit=10)
+    for song in range(10):
+        input_id = spotify_search['tracks']['items'][song]['id']
+        spotify_player(input_id)
+        input_song_name = spotify_search['tracks']['items'][song]['name']
+        st.write(input_song_name)
+        if st.text_input('Did you mean this song? Type in y for yes or n for no.') in ['y','yes']:
+            break
+        else:
+            continue
+
+    if input_song_name in bb_df['title'].values:
+        # Get random row and column indices
+        random_row = np.random.randint(0, bb_df.shape[0])
+        random_title = bb_df.iloc[random_row, 0]
+        random_artist = bb_df.iloc[random_row, 1]
+        spotify_search2 = sp.search(q=random_title + ' ' + random_artist, limit=1)
+        hot_rec_id = spotify_search2['tracks']['items'][0]['id']
+        spotify_player(hot_rec_id)
+        st.write(f'Your song is currently sizzling hot, so here is another hot song: {random_title} by {random_artist}')
+        sys.exit()
+
     else:
-        continue
+        print("Your song is not in the Billboard Top 100, but of course this doesnt mean anything. Here is a recommendation for you:")
 
-if input_song_name in bb_df['title'].values:
-    # Get random row and column indices
-    random_row = np.random.randint(0, bb_df.shape[0])
-    random_title = bb_df.iloc[random_row, 0]
-    random_artist = bb_df.iloc[random_row, 1]
-    spotify_search2 = sp.search(q=random_title + ' ' + random_artist, limit=1)
-    hot_rec_id = spotify_search2['tracks']['items'][0]['id']
-    display(play_song(hot_rec_id))
-    print(f'Your song is currently sizzling hot, so here is another hot song: {random_title} by {random_artist}')
-    sys.exit()
+    # get audio features of the input song
+    af=pd.DataFrame(sp.audio_features(input_id))
+    af_relevant=af[["danceability","energy","loudness","speechiness","acousticness",
+        "instrumentalness","liveness","valence","tempo"]]
 
-else:
-    print("Your song is not in the Billboard Top 100, but of course this doesnt mean anything. Here is a recommendation for you:")
+    # Load the scaler and KMeans model
+    with open('scaler.pkl', 'rb') as scaler_file:
+        loaded_scaler = pickle.load(scaler_file)
 
-# get audio features of the input song
-af=pd.DataFrame(sp.audio_features(input_id))
-af_relevant=af[["danceability","energy","loudness","speechiness","acousticness",
-    "instrumentalness","liveness","valence","tempo"]]
+    with open('kmeans_8_cluster.pkl', 'rb') as kmeans_file:
+        loaded_kmeans = pickle.load(kmeans_file)
 
-# Load the scaler and KMeans model
-with open('scaler.pkl', 'rb') as scaler_file:
-    loaded_scaler = pickle.load(scaler_file)
+    af_scaled = loaded_scaler.transform(af_relevant)
 
-with open('kmeans_8_cluster.pkl', 'rb') as kmeans_file:
-    loaded_kmeans = pickle.load(kmeans_file)
+    cluster_predicted = loaded_kmeans.predict(af_scaled)
 
-af_scaled = loaded_scaler.transform(af_relevant)
+    afeatures_df = pd.read_csv('afeatures_with_clusters.csv')
 
-cluster_predicted = loaded_kmeans.predict(af_scaled)
+    cluster_filtered = afeatures_df[afeatures_df['cluster'] == int(cluster_predicted)]
 
-afeatures_df = pd.read_csv('afeatures_with_clusters.csv')
+    random_row = np.random.randint(0, cluster_filtered.shape[0])
+    recommendation_id = cluster_filtered.iloc[random_row, 12]
 
-cluster_filtered = afeatures_df[afeatures_df['cluster'] == int(cluster_predicted)]
-
-random_row = np.random.randint(0, cluster_filtered.shape[0])
-recommendation_id = cluster_filtered.iloc[random_row, 12]
-
-display(play_song(recommendation_id))
+    spotify_player(recommendation_id)
