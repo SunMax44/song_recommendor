@@ -6,7 +6,6 @@ import numpy as np
 import json
 import spotipy
 import pickle
-import random
 import sys
 
 #Initialize SpotiPy with user credentials
