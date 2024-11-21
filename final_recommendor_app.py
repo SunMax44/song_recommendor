@@ -68,7 +68,7 @@ if st.button('Lets go!'):
         sys.exit()
 
     else:
-        print("Your song is not in the Billboard Top 100, but of course this doesnt mean anything. Here is a recommendation for you:")
+        st.write("Your song is not in the Billboard Top 100, but of course this doesnt mean anything. Here is a recommendation for you:")
 
     # get audio features of the input song
     af=pd.DataFrame(sp.audio_features(input_id))
