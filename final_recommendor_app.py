@@ -6,8 +6,6 @@ import numpy as np
 import json
 import spotipy
 import pickle
-from IPython.display import IFrame
-from IPython.display import display
 import random
 import sys
 
