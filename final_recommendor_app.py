@@ -8,6 +8,7 @@ import spotipy
 import pickle
 import sys
 import streamlit as st
+from spotipy.oauth2 import SpotifyClientCredentials
 
 # setup spotify API access
 client_id = st.secrets["client_id"]
