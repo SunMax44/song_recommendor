@@ -79,7 +79,7 @@ if st.session_state.track_ids:
             st.warning("No more songs to display!")
 
 
-    if input_song_name in bb_df['title'].values:
+    if current_song_name in bb_df['title'].values:
         # Get random row and column indices
         random_row = np.random.randint(0, bb_df.shape[0])
         random_title = bb_df.iloc[random_row, 0]
