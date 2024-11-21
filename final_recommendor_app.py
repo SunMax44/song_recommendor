@@ -8,6 +8,9 @@ import spotipy
 import pickle
 import sys
 
+client_id = st.secrets["client_id"]
+client_secret = st.secrets["client_secret"]
+
 #Initialize SpotiPy with user credentials
 from config import client_id, client_secret
 from spotipy.oauth2 import SpotifyClientCredentials
