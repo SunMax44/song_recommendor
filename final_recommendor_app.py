@@ -67,8 +67,10 @@ if st.session_state.track_ids:
     # "Show me the next one" button
     if st.button("No, show me the next one."):
         # Move to the next song
-        if current_index < len(st.session_state.track_ids) - 1:
+        if st.session_state.current_song_index < len(st.session_state.track_ids) - 1:
             st.session_state.current_song_index += 1
+            # Trigger a re-render by setting placeholders for the song name and player
+            st.experimental_rerun()
         else:
             st.warning("No more songs to display!")
 
