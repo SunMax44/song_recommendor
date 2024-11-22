@@ -79,7 +79,7 @@ if st.session_state.track_ids:
 
     # Display updated song details
     spotify_player(current_song_id)
-    st.write(f"Updated Song Name: {current_song_name}")
+    st.write(f"Updated Song Name: {current_song_name}. (Ignore on the first search result, then take this.)")
 
 
 
