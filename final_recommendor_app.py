@@ -62,7 +62,7 @@ if st.session_state.track_ids:
     # Show the Spotify player and song name
     st.subheader("Is this the song?")
     spotify_player(current_song_id)
-    st.write(f"Song Name: {current_song_name}")
+    st.write(f"Song Name: {current_song_name}. (ignore this first song, when showing the search results)")
 
     # "Show me the next one" button
     if st.button("No, show me the next one."):
