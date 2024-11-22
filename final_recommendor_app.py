@@ -68,11 +68,20 @@ if st.session_state.track_ids:
     if st.button("No, show me the next one."):
         # Move to the next song
         if st.session_state.current_song_index < len(st.session_state.track_ids) - 1:
-            st.session_state.current_song_index += 1
-            # Trigger a re-render by setting placeholders for the song name and player
-            st.experimental_rerun()
+            st.session_state.current_song_index += 1  # Increment song index
         else:
             st.warning("No more songs to display!")
+
+    # Update the current song dynamically based on session state
+    current_index = st.session_state.current_song_index
+    current_song_name = st.session_state.track_names[current_index]
+    current_song_id = st.session_state.track_ids[current_index]
+
+    # Display updated song details
+    spotify_player(current_song_id)
+    st.write(f"Updated Song Name: {current_song_name}")
+
+
 
     if current_song_name in bb_df['title'].values:
         # Get random row and column indices
