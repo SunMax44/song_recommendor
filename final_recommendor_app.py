@@ -25,9 +25,6 @@ import streamlit as st
 from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
 
-# Initialize Spotify client
-sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id="your_client_id", client_secret="your_client_secret"))
-
 # Define Spotify player
 def spotify_player(track_id):
     embed_url = f"https://open.spotify.com/embed/track/{track_id}"
