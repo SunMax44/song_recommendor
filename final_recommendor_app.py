@@ -102,7 +102,7 @@ if st.session_state.track_ids:
     with open('scaler.pkl', 'rb') as scaler_file:
         loaded_scaler = pickle.load(scaler_file)
 
-    with open('kmeans_16_cluster.pkl', 'rb') as kmeans_file:
+    with open('kmeans_26_cluster.pkl', 'rb') as kmeans_file:
         loaded_kmeans = pickle.load(kmeans_file)
 
     af_scaled = loaded_scaler.transform(af_relevant)
