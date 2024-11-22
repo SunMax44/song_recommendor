@@ -66,11 +66,8 @@ if st.session_state.track_ids:
     spotify_player(current_song_id)
     st.write(f"Song Name: {current_song_name}")
 
-    # Buttons for user confirmation
-    if st.button("Yes, this is my song!"):
-        st.success("You selected the song! Click again on the button to get another recommendation for your input song :)")
-        # Here, you can add code to recommend a new song
-    elif st.button("No, show me the next one."):
+    # Here, you can find another song
+    if st.button("No, show me the next one."):
         # Move to the next song
         if current_index < len(st.session_state.track_ids) - 1:
             st.session_state.current_song_index += 1
@@ -102,7 +99,7 @@ if st.session_state.track_ids:
     with open('scaler.pkl', 'rb') as scaler_file:
         loaded_scaler = pickle.load(scaler_file)
 
-    with open('kmeans_26_cluster.pkl', 'rb') as kmeans_file:
+    with open('kmeans_21_cluster.pkl', 'rb') as kmeans_file:
         loaded_kmeans = pickle.load(kmeans_file)
 
     af_scaled = loaded_scaler.transform(af_relevant)
