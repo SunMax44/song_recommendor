@@ -68,7 +68,7 @@ if st.session_state.track_ids:
 
     # Buttons for user confirmation
     if st.button("Yes, this is my song!"):
-        st.success("You selected the song!")
+        st.success("You selected the song! Click again on the button to get another recommendation for your input song :)")
         # Here, you can add code to recommend a new song
     elif st.button("No, show me the next one."):
         # Move to the next song
